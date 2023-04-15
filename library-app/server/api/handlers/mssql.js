@@ -21,7 +21,7 @@ const serverConfig = {
 // mssql.connect(serverConfig)
 // console.log(mssql.query("select @@VERSION"))
 
-const insert = (query) => {
+const insert = (query, req, res) => {
     mssql.connect(serverConfig, (err) => {
         if (err) console.log(err)
         var request = new mssql.Request()
@@ -34,21 +34,20 @@ const insert = (query) => {
     })
 }
 
-const select = (query) => {
+const select = (query, req, res) => {
     mssql.connect(serverConfig, (err) => {
         if (err) console.log(err)
         var request = new mssql.Request()
         request.query(query, (err, records) => {
             if (err) {
-                console.log(err)
+                res.status(500).json({ err })
             } else {
-                console.log(records.recordset)
-                return records.recordset
+                res.status(200).json(records.recordset)
+                // return true
             }
         })
     })
 }
-
 
 
 const test = () => {

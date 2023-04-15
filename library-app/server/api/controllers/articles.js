@@ -36,15 +36,14 @@ const getAllArticles = (req, res) => {
 const createArticle = (req, res) => {
     const { title, description, content } = req.body
     const generatedId = uuid.v4()
-    const query = `INSERT INTO Articles ([id], [title], [desciption], [conetnt]) 
-                       VALUES ('${generatedId}','${title}','${description}','${content}')`
+    const query = `INSERT INTO Articles ([id], [title], [description], [conetnt]) 
+                   VALUES ('${generatedId}','${title}','${description}','${content}')`
 
     mssql.connect(serverConfig, (err) => {
         if (err) console.log(err)
         var request = new mssql.Request()
         request.query(query, (err, records) => {
             if (err) {
-                console.log(err)
                 res.status(500).json({ err })
             } else {
                 res.status(200).json({
@@ -57,8 +56,23 @@ const createArticle = (req, res) => {
 
 const updateArticle = (req, res) => {
     const articleId = req.params.id
-    res.status(200).json({
-        message: `Update Article ${articleId}`,
+    const { title, description, content } = req.body
+    
+    const query = `UPDATE [dbo].[Articles] 
+                   SET [title]='${title}',[description]='${description}',[conetnt]='${content}' 
+                   WHERE id='${articleId}'`
+    mssql.connect(serverConfig, (err) => {
+        if (err) console.log(err)
+        var request = new mssql.Request()
+        request.query(query, (err, records) => {
+            if (err) {
+                res.status(500).json({ err })
+            } else {
+                res.status(200).json({
+                    message: `Article ${articleId} Updated Successfully`,
+                })
+            }
+        })
     })
 }
 
