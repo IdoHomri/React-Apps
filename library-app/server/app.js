@@ -6,6 +6,8 @@ const articlesRouter = require("./api/routes/articles")
 const categoriesRouter = require("./api/routes/categories")
 const usersRouter = require("./api/routes/users")
 
+
+
 app.use(morgan("dev"))
 app.use(express.json())
 // CORS
